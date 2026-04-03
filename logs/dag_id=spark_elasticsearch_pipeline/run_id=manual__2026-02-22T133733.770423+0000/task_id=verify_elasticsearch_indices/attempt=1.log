@@ -1,0 +1,38 @@
+[2026-02-22T13:37:39.979+0000] {local_task_job_runner.py:123} INFO - ::group::Pre task execution logs
+[2026-02-22T13:37:39.994+0000] {taskinstance.py:2613} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: spark_elasticsearch_pipeline.verify_elasticsearch_indices manual__2026-02-22T13:37:33.770423+00:00 [queued]>
+[2026-02-22T13:37:40.001+0000] {taskinstance.py:2613} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: spark_elasticsearch_pipeline.verify_elasticsearch_indices manual__2026-02-22T13:37:33.770423+00:00 [queued]>
+[2026-02-22T13:37:40.002+0000] {taskinstance.py:2866} INFO - Starting attempt 1 of 3
+[2026-02-22T13:37:40.013+0000] {taskinstance.py:2889} INFO - Executing <Task(PythonOperator): verify_elasticsearch_indices> on 2026-02-22 13:37:33.770423+00:00
+[2026-02-22T13:37:40.020+0000] {warnings.py:112} WARNING - /home/***/.local/lib/python3.12/site-packages/***/task/task_runner/standard_task_runner.py:70: DeprecationWarning: This process (pid=466) is multi-threaded, use of fork() may lead to deadlocks in the child.
+  pid = os.fork()
+
+[2026-02-22T13:37:40.021+0000] {standard_task_runner.py:72} INFO - Started process 467 to run task
+[2026-02-22T13:37:40.022+0000] {standard_task_runner.py:104} INFO - Running: ['***', 'tasks', 'run', 'spark_elasticsearch_pipeline', 'verify_elasticsearch_indices', 'manual__2026-02-22T13:37:33.770423+00:00', '--job-id', '9', '--raw', '--subdir', 'DAGS_FOLDER/spark_elasticsearch_pipeline.py', '--cfg-path', '/tmp/tmp8kxdigi8']
+[2026-02-22T13:37:40.023+0000] {standard_task_runner.py:105} INFO - Job 9: Subtask verify_elasticsearch_indices
+[2026-02-22T13:37:40.059+0000] {task_command.py:467} INFO - Running <TaskInstance: spark_elasticsearch_pipeline.verify_elasticsearch_indices manual__2026-02-22T13:37:33.770423+00:00 [running]> on host 1ae2f65e4fd0
+[2026-02-22T13:37:40.115+0000] {taskinstance.py:3132} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='data-team' AIRFLOW_CTX_DAG_ID='spark_elasticsearch_pipeline' AIRFLOW_CTX_TASK_ID='verify_elasticsearch_indices' AIRFLOW_CTX_EXECUTION_DATE='2026-02-22T13:37:33.770423+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='manual__2026-02-22T13:37:33.770423+00:00'
+[2026-02-22T13:37:40.116+0000] {taskinstance.py:731} INFO - ::endgroup::
+[2026-02-22T13:37:40.277+0000] {_transport.py:349} INFO - POST http://elasticsearch:9200/mm_state_aggregations/_count [status:200 duration:0.007s]
+[2026-02-22T13:37:40.278+0000] {logging_mixin.py:190} INFO - 
+📊 Índice: mm_state_aggregations
+[2026-02-22T13:37:40.278+0000] {logging_mixin.py:190} INFO -    Total documentos: 10
+[2026-02-22T13:37:40.313+0000] {_transport.py:349} INFO - POST http://elasticsearch:9200/mm_state_aggregations/_search [status:200 duration:0.034s]
+[2026-02-22T13:37:40.314+0000] {logging_mixin.py:190} INFO -    Top 3:
+[2026-02-22T13:37:40.314+0000] {logging_mixin.py:190} INFO -      - CA: 561184 (avg: 55.21)
+[2026-02-22T13:37:40.314+0000] {logging_mixin.py:190} INFO -      - WA: 557227 (avg: 55.36)
+[2026-02-22T13:37:40.315+0000] {logging_mixin.py:190} INFO -      - TX: 556493 (avg: 55.25)
+[2026-02-22T13:37:40.319+0000] {_transport.py:349} INFO - POST http://elasticsearch:9200/mm_color_aggregations/_count [status:200 duration:0.004s]
+[2026-02-22T13:37:40.319+0000] {logging_mixin.py:190} INFO - 
+📊 Índice: mm_color_aggregations
+[2026-02-22T13:37:40.320+0000] {logging_mixin.py:190} INFO -    Total documentos: 6
+[2026-02-22T13:37:40.324+0000] {_transport.py:349} INFO - POST http://elasticsearch:9200/mm_color_aggregations/_search [status:200 duration:0.004s]
+[2026-02-22T13:37:40.324+0000] {logging_mixin.py:190} INFO -    Top 3:
+[2026-02-22T13:37:40.325+0000] {logging_mixin.py:190} INFO -      - Green: 926150
+[2026-02-22T13:37:40.325+0000] {logging_mixin.py:190} INFO -      - Yellow: 923009
+[2026-02-22T13:37:40.325+0000] {logging_mixin.py:190} INFO -      - Red: 916864
+[2026-02-22T13:37:40.326+0000] {python.py:240} INFO - Done. Returned value was: None
+[2026-02-22T13:37:40.333+0000] {taskinstance.py:340} INFO - ::group::Post task execution logs
+[2026-02-22T13:37:40.333+0000] {taskinstance.py:352} INFO - Marking task as SUCCESS. dag_id=spark_elasticsearch_pipeline, task_id=verify_elasticsearch_indices, run_id=manual__2026-02-22T13:37:33.770423+00:00, execution_date=20260222T133733, start_date=20260222T133739, end_date=20260222T133740
+[2026-02-22T13:37:40.356+0000] {local_task_job_runner.py:266} INFO - Task exited with return code 0
+[2026-02-22T13:37:40.371+0000] {taskinstance.py:3895} INFO - 1 downstream tasks scheduled from follow-on schedule check
+[2026-02-22T13:37:40.372+0000] {local_task_job_runner.py:245} INFO - ::endgroup::

@@ -1,0 +1,69 @@
+[2026-02-22T13:37:34.238+0000] {local_task_job_runner.py:123} INFO - ::group::Pre task execution logs
+[2026-02-22T13:37:34.250+0000] {taskinstance.py:2613} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: spark_elasticsearch_pipeline.process_with_spark_and_index manual__2026-02-22T13:37:33.770423+00:00 [queued]>
+[2026-02-22T13:37:34.255+0000] {taskinstance.py:2613} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: spark_elasticsearch_pipeline.process_with_spark_and_index manual__2026-02-22T13:37:33.770423+00:00 [queued]>
+[2026-02-22T13:37:34.256+0000] {taskinstance.py:2866} INFO - Starting attempt 1 of 3
+[2026-02-22T13:37:34.265+0000] {taskinstance.py:2889} INFO - Executing <Task(PythonOperator): process_with_spark_and_index> on 2026-02-22 13:37:33.770423+00:00
+[2026-02-22T13:37:34.272+0000] {warnings.py:112} WARNING - /home/***/.local/lib/python3.12/site-packages/***/task/task_runner/standard_task_runner.py:70: DeprecationWarning: This process (pid=397) is multi-threaded, use of fork() may lead to deadlocks in the child.
+  pid = os.fork()
+
+[2026-02-22T13:37:34.273+0000] {standard_task_runner.py:72} INFO - Started process 398 to run task
+[2026-02-22T13:37:34.273+0000] {standard_task_runner.py:104} INFO - Running: ['***', 'tasks', 'run', 'spark_elasticsearch_pipeline', 'process_with_spark_and_index', 'manual__2026-02-22T13:37:33.770423+00:00', '--job-id', '8', '--raw', '--subdir', 'DAGS_FOLDER/spark_elasticsearch_pipeline.py', '--cfg-path', '/tmp/tmp8a8gqtgi']
+[2026-02-22T13:37:34.274+0000] {standard_task_runner.py:105} INFO - Job 8: Subtask process_with_spark_and_index
+[2026-02-22T13:37:34.302+0000] {task_command.py:467} INFO - Running <TaskInstance: spark_elasticsearch_pipeline.process_with_spark_and_index manual__2026-02-22T13:37:33.770423+00:00 [running]> on host 1ae2f65e4fd0
+[2026-02-22T13:37:34.349+0000] {taskinstance.py:3132} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='data-team' AIRFLOW_CTX_DAG_ID='spark_elasticsearch_pipeline' AIRFLOW_CTX_TASK_ID='process_with_spark_and_index' AIRFLOW_CTX_EXECUTION_DATE='2026-02-22T13:37:33.770423+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='manual__2026-02-22T13:37:33.770423+00:00'
+[2026-02-22T13:37:34.349+0000] {taskinstance.py:731} INFO - ::endgroup::
+[2026-02-22T13:37:34.666+0000] {logging_mixin.py:190} INFO - 🔗 Conectando ao Spark: sc://spark-connect:15002
+[2026-02-22T13:37:34.952+0000] {logging_mixin.py:190} INFO - 📂 Lendo CSV: /opt/spark/work-dir/data/mm_dataset.csv
+[2026-02-22T13:37:35.983+0000] {logging_mixin.py:190} INFO - 📊 Total de registros: 99999
+[2026-02-22T13:37:36.213+0000] {logging_mixin.py:190} INFO - root
+ |-- State: string (nullable = true)
+ |-- Color: string (nullable = true)
+ |-- Count: integer (nullable = true)
+[2026-02-22T13:37:36.213+0000] {logging_mixin.py:190} INFO - 
+🗺️ Top 10 Estados:
+[2026-02-22T13:37:36.890+0000] {logging_mixin.py:190} INFO - +-----+-------------+-----------+------------------+
+|State|total_records|total_count|         avg_count|
++-----+-------------+-----------+------------------+
+|   CA|        10164|     561184| 55.21290830381739|
+|   WA|        10065|     557227|55.362841530054645|
+|   TX|        10072|     556493| 55.25148927720413|
+|   CO|        10051|     556302|55.347925579544324|
+|   NM|        10050|     553454| 55.07004975124378|
+|   NV|        10025|     548477| 54.71092269326683|
+|   AZ|        10001|     546812| 54.67573242675732|
+|   OR|         9903|     542169| 54.74795516510149|
+|   WY|         9782|     538975| 55.09865058270292|
+|   UT|         9886|     538942| 54.51567873760874|
++-----+-------------+-----------+------------------+
+[2026-02-22T13:37:36.891+0000] {logging_mixin.py:190} INFO - 
+🎨 Agregação por Cor:
+[2026-02-22T13:37:37.185+0000] {logging_mixin.py:190} INFO - +------+-------------+-----------+
+| Color|total_records|total_count|
++------+-------------+-----------+
+| Green|        16928|     926150|
+|Yellow|        16796|     923009|
+|   Red|        16619|     916864|
+|Orange|        16697|     915793|
+| Brown|        16510|     915703|
+|  Blue|        16449|     902516|
++------+-------------+-----------+
+[2026-02-22T13:37:37.186+0000] {logging_mixin.py:190} INFO - 
+📤 Convertendo para Pandas...
+[2026-02-22T13:37:37.715+0000] {logging_mixin.py:190} INFO - 
+🔍 Conectando ao Elasticsearch: http://elasticsearch:9200
+[2026-02-22T13:37:37.719+0000] {_transport.py:349} INFO - HEAD http://elasticsearch:9200/mm_state_aggregations [status:404 duration:0.003s]
+[2026-02-22T13:37:37.831+0000] {_transport.py:349} INFO - PUT http://elasticsearch:9200/mm_state_aggregations [status:200 duration:0.111s]
+[2026-02-22T13:37:37.831+0000] {logging_mixin.py:190} INFO - ✅ Índice 'mm_state_aggregations' criado
+[2026-02-22T13:37:37.833+0000] {_transport.py:349} INFO - HEAD http://elasticsearch:9200/mm_color_aggregations [status:404 duration:0.001s]
+[2026-02-22T13:37:37.927+0000] {_transport.py:349} INFO - PUT http://elasticsearch:9200/mm_color_aggregations [status:200 duration:0.093s]
+[2026-02-22T13:37:37.927+0000] {logging_mixin.py:190} INFO - ✅ Índice 'mm_color_aggregations' criado
+[2026-02-22T13:35:54.500+0000] {_transport.py:349} INFO - PUT http://elasticsearch:9200/_bulk [status:200 duration:-103.428s]
+[2026-02-22T13:35:54.501+0000] {logging_mixin.py:190} INFO - ✅ Indexados 10 documentos em 'mm_state_aggregations'
+[2026-02-22T13:35:54.527+0000] {_transport.py:349} INFO - PUT http://elasticsearch:9200/_bulk [status:200 duration:0.025s]
+[2026-02-22T13:35:54.527+0000] {logging_mixin.py:190} INFO - ✅ Indexados 6 documentos em 'mm_color_aggregations'
+[2026-02-22T13:35:54.528+0000] {python.py:240} INFO - Done. Returned value was: {'state_docs': 10, 'color_docs': 6}
+[2026-02-22T13:35:54.544+0000] {taskinstance.py:340} INFO - ::group::Post task execution logs
+[2026-02-22T13:35:54.545+0000] {taskinstance.py:352} INFO - Marking task as SUCCESS. dag_id=spark_elasticsearch_pipeline, task_id=process_with_spark_and_index, run_id=manual__2026-02-22T13:37:33.770423+00:00, execution_date=20260222T133733, start_date=20260222T133734, end_date=20260222T133554
+[2026-02-22T13:35:54.572+0000] {local_task_job_runner.py:266} INFO - Task exited with return code 0
+[2026-02-22T13:35:54.589+0000] {taskinstance.py:3895} INFO - 1 downstream tasks scheduled from follow-on schedule check
+[2026-02-22T13:35:54.591+0000] {local_task_job_runner.py:245} INFO - ::endgroup::
