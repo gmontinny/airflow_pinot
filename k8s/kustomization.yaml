@@ -1,0 +1,13 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: airflow-datalake
+
+resources:
+  - base/namespace.yaml
+  - base/airflow/airflow.yaml
+  - base/pinot/pinot.yaml
+  - base/starrocks/starrocks.yaml
+  - base/kafka/kafka.yaml
+  - base/storage/storage.yaml
+  - base/observability/observability.yaml

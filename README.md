@@ -103,6 +103,10 @@ airflow_pinot/
 │   │   ├── core-site.xml      # Configuração Hadoop/S3
 │   │   └── spark-defaults.conf # Configuração padrão do Spark
 │   └── Dockerfile             # Imagem Spark Connect 4.0.1
+├── k8s/                       # Manifests Kubernetes (Kustomize)
+│   ├── kustomization.yaml
+│   ├── deploy.sh
+│   └── base/                  # Airflow, Pinot, StarRocks, Kafka, Storage, Observability
 ├── .env                       # Variáveis de ambiente
 ├── docker-compose-airflow.yml # Composição de todos os serviços
 ├── Makefile                   # Atalhos de comandos
@@ -514,6 +518,44 @@ O StarRocks roda com 2 componentes principais + um container auxiliar de registr
 - **starrocks-add-be** — Container auxiliar que garante o registro do BE no FE via `ALTER SYSTEM ADD BACKEND`
 
 > **Nota**: O BE demora ~30-60s para ficar `Alive` após o FE estar healthy. A DAG lida com isso via retries automáticos na task `setup_starrocks`.
+
+---
+
+## Deploy no Kubernetes
+
+O projeto inclui manifests Kubernetes completos com Kustomize em `k8s/`.
+
+```bash
+# Deploy automatizado
+cd k8s && bash deploy.sh
+
+# Ou via Makefile
+make k8s-deploy
+
+# Ou manualmente
+kubectl apply -k k8s/
+```
+
+### Acessos via NodePort
+
+| Serviço | NodePort |
+|---|---|
+| Airflow UI | [localhost:30085](http://localhost:30085) |
+| Pinot UI | [localhost:30010](http://localhost:30010) |
+| StarRocks MySQL | `mysql -h localhost -P 30930 -u root` |
+| MinIO Console | [localhost:30901](http://localhost:30901) |
+| Superset | [localhost:30088](http://localhost:30088) |
+
+```bash
+# Status dos pods
+make k8s-status
+
+# Logs do Airflow
+make k8s-logs
+
+# Remover tudo
+make k8s-delete
+```
 
 ---
 

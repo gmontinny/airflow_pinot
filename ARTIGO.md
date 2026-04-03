@@ -358,6 +358,8 @@ O Spark Connect simplifica enormemente a arquitetura (sem JVM no Worker), mas te
 
 ## Como Executar
 
+### Docker Compose (desenvolvimento local)
+
 ```bash
 # 1. Clone o repositório
 git clone <repo-url>
@@ -379,6 +381,93 @@ chmod +x setup-airflow.sh
 #    StarRocks: mysql -h 127.0.0.1 -P 9030 -u root -e "SELECT * FROM demo_ibge.ibge_aglomeracoes LIMIT 10"
 ```
 
+### Kubernetes (produção / staging)
+
+O projeto inclui manifests Kubernetes completos com **Kustomize**, organizados por componente:
+
+```
+k8s/
+├── kustomization.yaml          # Ponto de entrada do Kustomize
+├── deploy.sh                   # Script de deploy automatizado
+└── base/
+    ├── namespace.yaml          # Namespace + ConfigMap global
+    ├── airflow/
+    │   └── airflow.yaml        # Postgres, Redis, API Server, Scheduler, Worker, Triggerer, Init Job
+    ├── pinot/
+    │   └── pinot.yaml          # ZooKeeper, Controller, Broker, Server + PVCs
+    ├── starrocks/
+    │   └── starrocks.yaml      # Frontend, Backend, Add-BE Job + PVCs
+    ├── kafka/
+    │   └── kafka.yaml          # ZooKeeper, Kafka, Schema Registry
+    ├── storage/
+    │   └── storage.yaml        # MinIO + Spark Connect
+    └── observability/
+        └── observability.yaml  # Elasticsearch, Logstash, Neo4j, Superset
+```
+
+Cada serviço do Docker Compose tem seu equivalente em Kubernetes: Deployments com readiness probes, Services (ClusterIP + NodePort para UIs), PersistentVolumeClaims para dados persistentes e Jobs para inicialização (Airflow DB migrate, StarRocks BE registration).
+
+#### Deploy rápido
+
+```bash
+# Via script automatizado
+cd k8s && bash deploy.sh
+
+# Ou via Makefile
+make k8s-deploy
+
+# Ou manualmente via Kustomize
+kubectl apply -k k8s/
+```
+
+#### Acessos via NodePort
+
+| Serviço | NodePort | URL |
+|---|---|---|
+| Airflow UI | 30085 | http://localhost:30085 |
+| Pinot UI | 30010 | http://localhost:30010 |
+| StarRocks MySQL | 30930 | `mysql -h localhost -P 30930 -u root` |
+| MinIO Console | 30901 | http://localhost:30901 |
+| Superset | 30088 | http://localhost:30088 |
+
+#### Acessos via port-forward (alternativa)
+
+```bash
+# Airflow
+kubectl port-forward svc/airflow-apiserver 8085:8080 -n airflow-datalake
+
+# Pinot
+kubectl port-forward svc/pinot-controller 9010:9000 -n airflow-datalake
+
+# StarRocks
+kubectl port-forward svc/starrocks-fe 9030:9030 -n airflow-datalake
+```
+
+#### Comandos úteis
+
+```bash
+# Status dos pods
+make k8s-status
+
+# Logs do Airflow
+make k8s-logs
+
+# Remover tudo
+make k8s-delete
+```
+
+#### Docker Compose vs. Kubernetes
+
+| Aspecto | Docker Compose | Kubernetes |
+|---|---|---|
+| **Uso** | Desenvolvimento local, Dev Container | Staging, produção |
+| **Escala** | Fixa (1 réplica) | Escalável (HPA, réplicas) |
+| **Persistência** | Volumes Docker | PersistentVolumeClaims |
+| **Rede** | Bridge network | ClusterIP + NodePort/Ingress |
+| **Health checks** | `healthcheck:` | `readinessProbe:` / `livenessProbe:` |
+| **Init tasks** | `depends_on: condition` | Jobs + init containers |
+| **Deploy** | `make up` | `kubectl apply -k k8s/` |
+
 ---
 
 ## Conclusão
@@ -390,3 +479,14 @@ O Apache Pinot se destaca como a peça central para **user-facing analytics** �
 As lições aprendidas durante a construção — desde os detalhes de multipart upload no Pinot até o timing de registro do StarRocks BE — são o tipo de conhecimento prático que só se adquire colocando a mão na massa. Este projeto serve como um laboratório completo para explorar essas tecnologias sem a complexidade de configurar cada uma manualmente, graças ao poder do Docker Compose e do Dev Container.
 
 O futuro da engenharia de dados é desacoplado, assíncrono e, acima de tudo, **instantâneo**.
+
+---
+
+## Referências
+
+- [Apache Pinot Architecture Explained for Data Engineers](https://medium.com/towards-data-engineering/apache-pinot-architecture-explained-for-data-engineers-2bd971ed4a4c) — Towards Data Engineering (Medium)
+- [Apache Pinot — Documentação Oficial](https://docs.pinot.apache.org/)
+- [Apache Airflow — Documentação Oficial](https://airflow.apache.org/docs/)
+- [Spark Connect — Overview](https://spark.apache.org/docs/latest/spark-connect-overview.html)
+- [StarRocks — Documentação Oficial](https://docs.starrocks.io/)
+- [API IBGE — Localidades](https://servicodados.ibge.gov.br/api/docs/localidades)

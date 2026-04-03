@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: airflow-datalake
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: platform-config
+  namespace: airflow-datalake
+data:
+  MINIO_ACCESS_KEY: minioadmin
+  MINIO_SECRET_KEY: minioadmin
+  KAFKA_BROKERS: kafka:9093
+  KAFKA_SCHEMA_REGISTRY: http://schema-registry:8081
+  ELASTICSEARCH_HOST: http://elasticsearch:9200
+  SPARK_CONNECT_URL: sc://spark-connect:15002
+  PINOT_CONTROLLER_URL: http://pinot-controller:9000
+  STARROCKS_FE_HOST: starrocks-fe
